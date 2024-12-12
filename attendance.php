@@ -20,13 +20,14 @@ if(isset($_POST['employeeId'])){
         $attendanceSql = "SELECT * FROM attendance WHERE employeeId = $emID AND date = '$today'";
         $attendanceResult = $conn->query($attendanceSql);
             if($attendanceResult !== FALSE){
-                $attendance = $attendanceResult->fetch_all(MYSQLI_ASSOC);
+                // $attendance = $attendanceResult->fetch_all(MYSQLI_ASSOC);
+                $attendance = $attendanceResult->fetch_assoc();
                 if($attendance ){
-                    if(!isset($attendance['timeout'])){
+                    if(!isset($attendance['timeOut'])){
                     // if(is_null($attendance['timeout'])){
                         echo "Employee has not signed out for today.";
                     }else{
-                        echo "Employee has signed out for today at " . $attendance['timeout'];
+                        echo "Employee has signed out for today at " . $attendance['timeOut'];
                     }
                 }else{
                     echo "No attendance record found for this employee today.";
@@ -62,13 +63,13 @@ if(isset($_POST['employeeId'])){
         <div onsubmit="return preventSubmit(event)">
             <label class="second_emp">Employee ID</label><br>
             <input type="text" class="emp2">
-            <button onclick="clockIn()" class="btn-signIn" <?php if($attendance){echo 'disabled';}?>>ClockIn</button>
+            <button onclick="clockIn()" id="clockInBtn" class="btn-signIn" <?php if($attendance){echo 'disabled';}?>>ClockIn</button>
             <!-- <button onclick="clockIn()" class="btn-signIn" <?php //if($att_rec->timein){echo 'disbled'}?>>ClockIn</button> -->
             <!-- <button onclick="clockIn()" class="btn-signIn" <?php //if($att_rec->timeout){echo 'disbled'}?>>ClockOut</button> -->
             <?php if($attendance){?>
-                <button onclick="clockOut()" class="btn-signOut" <?php if(isset($attendance['timeout'])){echo 'disabled';}?>>ClockOut</button>
+                <button onclick="clockOut()" id="clockOutBtn" class="btn-signOut" <?php if(isset($attendance['timeOut'])){echo 'disabled';}?>>ClockOut</button>
             <?php } else{?>
-                <button onclick="clockOut()" class="btn-signOut" disabled>ClockOut</button>
+                <button onclick="clockOut()" id="clockOutBtn" class="btn-signOut" disabled>ClockOut</button>
             <?php }?>
             <div id="error"></div>
             <div id="userLocation"></div>
@@ -197,13 +198,51 @@ if(isset($_POST['employeeId'])){
                         body : formdata
                     }
                 ).then(response=>response.text())
-                .then(data=>console.log(data))
+                .then((data)=>{
+                    console.log('response from api: ',data);
+                    if(data.trim()==='attendance added successfully'){
+                        console.log('clock in response test pass')
+                        clockInBtn.disabled = true;
+                        //check time for closing and update checkout btn accordingly
+                        closingTimeCheck();
+                    }else if(data.trim()==='attendance updated successfully'){
+                        console.log('clock out response test pass')
+                        clockOutBtn.disabled = true;
+                    }else{
+
+                        console.log(data.trim()==='attendance added successfully')
+                        console.log(data.trim()==='attendance updated successfully')
+                        console.log('clock out response test fail')
+                    }
+                })
                 .catch(error=>console.error('error : ', error));
             }else{
                 x.innerHTML = 'you are not within the office location you can not clockIn';
                 x.classList ='wrong';
             }
         }
+        function closingTimeCheck(){
+            let today = new Date();
+            let currentHour = today.getHours();
+            if(currentHour >= 7){
+                clockOutBtn.disabled = false;
+                console.log('closing time has reached');
+            }else{
+                clockOutBtn.disabled = true;
+                console.log('closing time has not reached');
+                const closingNote = document.createElement('div');
+                closingNote.innerText = 'closing time has not reached please check back by 5pm to clockout';
+                closingNote.style.color = 'blue';
+                closingNote.style.fontSize = '20px';
+                
+                document.querySelector('body').appendChild(closingNote);
+            }
+        }
+        <?php if(isset($attendance) && $attendance){?>
+            closingTimeCheck();
+        <?php } ?>
+       
+        
           
     </script>
 </body>

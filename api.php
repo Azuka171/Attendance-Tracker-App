@@ -9,10 +9,10 @@
         $attendanceSql = "SELECT * FROM attendance WHERE employeeId = $employeeID AND date = '$today'";
         $result = $conn->query($attendanceSql);
         if($result !== FALSE){
-            $attendanceRec = $result->fetch_all(MYSQLI_ASSOC);
+            $attendanceRec = $result->fetch_assoc();
             if($attendanceRec){
                 // record found for user for today;
-                if(isset($attendanceRec['timeout'])){
+                if(isset($attendanceRec['timeOut'])){
                      //employee has record and has clocked out for the day;
                      echo 'employee already signed out for the day';
                 }else{ 
@@ -39,15 +39,4 @@
         }   
     } 
 ?>
-<!-- <table border='1'>
-        <?php foreach($attendance as $empID){ ?>
-            <tr>
-                <td><?php echo $emp['id'];?></td>
-                <td><?php echo $emp['employeeId'];?></td>
-                <td><?php echo $emp['CURRENT_DATE'];?></td>
-                <td><?php echo $emp['CURRENT_TIME'];?></td>
-                <td><?php echo $emp['timeOut TIME'];?></td>
-                <td><button> view record </button></td>
-            </tr>
-        <?php }?>
-    </table> -->
+
