@@ -17,6 +17,8 @@
         <input type="text" name="email" required><br>
         <label>phone:</label><br>
         <input type="number" name="phone" required><br>
+        <label>Date Of Employment:</label><br>
+        <input type="date" name="doe" required><br>
         <input type="submit">
     </form>
     <?php
@@ -55,8 +57,9 @@
             $lname = $_GET['lname'];
             $email = $_GET['email'];
             $phone = $_GET['phone'];
-            $sql = "INSERT INTO employees ( firstname, lastname, email, phone)
-            VALUES ( '$fname', '$lname', '$email', '$phone')";
+            $date_of_employment = $_GET['doe'];
+            $sql = "INSERT INTO employees ( firstname, lastname, email, phone, date_of_employment)
+            VALUES ( '$fname', '$lname', '$email', '$phone', $date_of_employment)";
             if($conn->query($sql) === TRUE){
                 echo "New record for employee created sucessfully";
             }else{

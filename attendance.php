@@ -134,8 +134,8 @@ if(isset($_POST['employeeId'])){
         // const officeLong = 6.5961918;
 
         //testing coord for home
-        const officelat = 6.1329419;
-        const officeLong = 6.7923994;
+        const officelat = 4.8463872;
+        const officeLong = 7.0156288;
         
         //const officelat = 6.1854861 ;
         //const officeLong = 6.735517;
@@ -147,7 +147,7 @@ if(isset($_POST['employeeId'])){
         const min_lon = officeLong - lon_dif
         let userLat = null;
         let userLong = null;
-        let url = "api.php";
+        let url = "api/attendance-api.php";
         const x = document.getElementById('error');
         const userLocation = document.getElementById('userLocation');
         
