@@ -238,6 +238,7 @@
             }
             $sql = "INSERT INTO employees (employee_id, first_name, last_name, email, phone_number, date_of_employment)
             VALUES ( '$employeeid', '$fname', '$lname', '$email', '$phone', '$date_of_employment')";
+
             if($conn->query($sql) === TRUE){
                 echo "New record for employee created sucessfully";
             }else{
