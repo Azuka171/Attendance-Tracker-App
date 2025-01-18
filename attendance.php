@@ -81,6 +81,22 @@ if(isset($_POST['employeeId'])){
 
     
     <style>
+        /* body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #343a40;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
         label{
             font-size: .625rem;
             font-style: italic;
@@ -126,6 +142,148 @@ if(isset($_POST['employeeId'])){
             background-color: #999;
             cursor: not-allowed;
         }
+        input[type="submit"] {
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        form {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        } */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        button#clockInBtn {
+            background-color: #28a745;
+            color: white;
+        }
+        button#clockOutBtn {
+            background-color: #ffc107;
+            color: #333;
+        }
+        button[disabled] {
+            background-color: #ccc;
+            color: #666;
+            cursor: not-allowed;
+        }
+        button:hover:not([disabled]) {
+            opacity: 0.9;
+        }
+        .correct {
+            color: #28a745;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .wrong {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        #userLocation {
+            font-size: 14px;
+            color: #17a2b8;
+            margin-top: 10px;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 400px;
+            margin: 0 auto 20px auto;
+        }
+        form label {
+            font-weight: bold;
+        }
+        form input[type="text"] {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 14px;
+        }
+        form input[type="submit"] {
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        form input[type="submit"]:hover {
+            background: #0056b3;
+        }
+        div {
+            margin-top: 20px;
+        }
+        .closingNote {
+            color: #007bff;
+            font-size: 18px;
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
     <script>
         const accessGranted = confirm('do you want to give us your exact location');
@@ -134,8 +292,8 @@ if(isset($_POST['employeeId'])){
         // const officeLong = 6.5961918;
 
         //testing coord for home
-        const officelat = 6.1329419;
-        const officeLong = 6.7923994;
+        const officelat = 4.8463872;
+        const officeLong = 7.0156288;
         
         //const officelat = 6.1854861 ;
         //const officeLong = 6.735517;
@@ -147,7 +305,7 @@ if(isset($_POST['employeeId'])){
         const min_lon = officeLong - lon_dif
         let userLat = null;
         let userLong = null;
-        let url = "api.php";
+        let url = "api/attendance-api.php";
         const x = document.getElementById('error');
         const userLocation = document.getElementById('userLocation');
         
