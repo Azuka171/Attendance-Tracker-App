@@ -1,3 +1,4 @@
+<?php require_once 'db_connection.php';?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,6 +22,7 @@
                 <td> Phone</td>
                 <td> Date OF Employment</td>
                 <td>View Records</td>
+                <td>View Details</td>
             </tr>
         </thead>
         <tbody id="employees_records">
@@ -181,6 +183,16 @@
                 record_link.appendChild(record_btn);
                 view_records.appendChild(record_link);
                 employeeRow.appendChild(view_records);
+                
+                const view_details = document.createElement('td');
+                const detail_link = document.createElement('a');
+                detail_link.href = './employee-details.php?id=' + employee.id;
+                const detail_btn = document.createElement('button');
+                detail_btn.innerHTML = 'View Details';
+                detail_link.appendChild(detail_btn);
+                view_details.appendChild(detail_link);
+                employeeRow.appendChild(view_details);
+
 
                 employeeTbody.appendChild(employeeRow);
             });

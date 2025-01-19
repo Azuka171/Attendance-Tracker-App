@@ -23,9 +23,8 @@
     <?php } else { ?>
         <form>
             <div class="form-message">Please fill all the details in the form</div>
-            
-            <!-- <label>employeeId:</label><br>
-            <input type="number" name="eId"><br> -->
+
+            <!-- Employee ID -->
             <label>Employee Id:</label><br>
             <input type="text" name="employeeid" required <?php if(isset($_SESSION['previous_values'])){
                 echo 'value="'.$_SESSION['previous_values']['id'].'"';
@@ -36,16 +35,34 @@
                     unset($_SESSION['errors']['id']);
                 }?>
             </div>
-            <label>firstname:</label><br>
+
+            <!-- First Name -->
+            <label>First Name:</label><br>
             <input type="text" name="fname" required <?php if(isset($_SESSION['previous_values'])){
                 echo 'value="'.$_SESSION['previous_values']['fname'].'"';
             } ?>><br>
-            <label>lastname:</label><br>
+
+            <!-- Last Name -->
+            <label>Last Name:</label><br>
             <input type="text" name="lname" required <?php if(isset($_SESSION['previous_values'])){
                 echo 'value="'.$_SESSION['previous_values']['lname'].'"';
             } ?>><br>
-            <label>email Address:</label><br>
-            <input type="text" name="email" required <?php if(isset($_SESSION['previous_values'])){
+
+            <!-- Marital Status -->
+            <label>Marital Status:</label><br>
+            <input type="text" name="mstatus" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['mstatus'].'"';
+            } ?>><br>
+
+            <!-- Gender -->
+            <label>Gender:</label><br>
+            <input type="text" name="gender" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['gender'].'"';
+            } ?>><br>
+
+            <!-- Email Address -->
+            <label>Email Address:</label><br>
+            <input type="email" name="email" required <?php if(isset($_SESSION['previous_values'])){
                 echo 'value="'.$_SESSION['previous_values']['email'].'"';
             } ?>><br>
             <div class="error-message">
@@ -54,7 +71,9 @@
                     unset($_SESSION['errors']['email']);
                 }?>
             </div>
-            <label>phone:</label><br>
+
+            <!-- Phone -->
+            <label>Phone:</label><br>
             <input type="number" name="phone" required <?php if(isset($_SESSION['previous_values'])){
                 echo 'value="'.$_SESSION['previous_values']['phone'].'"';
             } ?>><br>
@@ -64,10 +83,74 @@
                     unset($_SESSION['errors']['phone']);
                 }?>
             </div>
-            <label>Date Of Employment:</label><br>
+             <!-- Date of Employment -->
+             <label>Date Of Employment:</label><br>
             <input type="date" name="doe" required <?php if(isset($_SESSION['previous_values'])){
                 echo 'value="'.$_SESSION['previous_values']['doe'].'"';
             } ?>><br>
+
+            <!-- Nationality -->
+            <label>Nationality:</label><br>
+            <input type="text" name="nationality" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['nationality'].'"';
+            } ?>><br>
+
+            <!-- Religion -->
+            <label>Religion:</label><br>
+            <input type="text" name="religion" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['religion'].'"';
+            } ?>><br>
+
+            <!-- State of Origin -->
+            <label>State Of Origin:</label><br>
+            <input type="text" name="stateOfOrigin" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['stateOfOrigin'].'"';
+            } ?>><br>
+
+            <!-- LGA -->
+            <label>LGA:</label><br>
+            <input type="text" name="lga" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['lga'].'"';
+            } ?>><br>
+
+            <!-- Next of Kin Full Name -->
+            <label>Next Of Kin Fullname:</label><br>
+            <input type="text" name="nextfullname" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['nextfullname'].'"';
+            } ?>><br>
+
+            <!-- Next of Kin Relationship -->
+            <label>Next Of Kin Relationship:</label><br>
+            <input type="text" name="nextrelation" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['nextrelation'].'"';
+            } ?>><br>
+
+            <!-- Next of Kin Email -->
+            <label>Next Of Kin Email:</label><br>
+            <input type="email" name="nextemail" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['nextemail'].'"';
+            } ?>><br>
+            <div class="error-message">
+                <?php if(isset($_SESSION['errors']['nextemail'])){
+                    echo $_SESSION['errors']['nextemail'];
+                    unset($_SESSION['errors']['nextemail']);
+                }?>
+            </div>
+
+
+            <!-- Next of Kin Phone -->
+            <label>Next Of Kin Phone:</label><br>
+            <input type="text" name="nextphone" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['nextphone'].'"';
+            } ?>><br>
+            <div class="error-message">
+                <?php if(isset($_SESSION['errors']['nextphone'])){
+                    echo $_SESSION['errors']['nextphone'];
+                    unset($_SESSION['errors']['nextphone']);
+                }?>
+            </div>
+
+
             <input type="submit">
         </form>
     <?php } ?>
@@ -85,7 +168,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 250vh;
         }
 
         /* Form Container Styling */
@@ -124,7 +207,8 @@
         
         /* Input Fields Styling */
         form input[type="text"],
-        form input[type="number"] {
+        form input[type="number"],
+        form input[type="email"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -251,16 +335,37 @@
             $employeeid = $_GET['employeeid'];
             $fname = $_GET['fname'];
             $lname = $_GET['lname'];
+            $mstatus = $_GET['mstatus'];
+            $gender = $_GET['gender'];
             $email = $_GET['email'];
             $phone = $_GET['phone'];
             $date_of_employment = $_GET['doe'];
+            $nationality = $_GET['nationality'];
+            $religion = $_GET['religion'];
+            $stateOfOrigin = $_GET['stateOfOrigin'];
+            $lga = $_GET['lga'];
+            $nextfullname = $_GET['nextfullname'];
+            $nextrelation = $_GET['nextrelation'];
+            $nextemail = $_GET['nextemail'];
+            $nextphone= $_GET['nextphone'];
+
             $_SESSION['previous_values'] = [
                 'id' => $employeeid,
                 'fname' => $fname,
                 'lname' => $lname,
+                'mstatus' => $mstatus,
+                'gender' => $gender,
                 'email' => $email,
                 'phone' => $phone,
                 'doe' => $date_of_employment,
+                'nationality' => $nationality,
+                'religion' => $religion,
+                'stateOfOrigin' => $stateOfOrigin,
+                'lga' => $lga,
+                'nextfullname' => $nextfullname,
+                'nextrelation' => $nextrelation,
+                'nextemail' => $nextemail,
+                'nextphone' => $nextphone
             ];
 
             $sql = "SELECT *
@@ -294,6 +399,21 @@
             }
             $sql = "SELECT *
                 FROM employees e 
+                WHERE e.next_Of_Kin_Email = '$nextemail'
+            ";
+            $result = $conn->query($sql);
+            if($result !== FALSE ){
+                $employee_rec = $result->fetch_all(MYSQLI_ASSOC);
+                if (count($employee_rec) > 0) {
+                    //echo 'employee next of kin email already exists';
+                    $_SESSION["errors"]['nextemail'] = "employee next of kin email already exists";
+                    header('Location: ' . $_SERVER['HTTP_REFERER']);
+                    exit;
+
+                }
+            }
+            $sql = "SELECT *
+                FROM employees e 
                 WHERE e.phone_number = '$phone'
             ";
             $result = $conn->query($sql);
@@ -306,8 +426,22 @@
                     exit;
                 }
             }
-            $sql = "INSERT INTO employees (employee_id, first_name, last_name, email, phone_number, date_of_employment)
-            VALUES ( '$employeeid', '$fname', '$lname', '$email', '$phone', '$date_of_employment')";
+            $sql = "SELECT *
+                FROM employees e 
+                WHERE e.next_Of_Kin_Phone = '$nextphone'
+            ";
+            $result = $conn->query($sql);
+            if($result !== FALSE ){
+                $employee_rec = $result->fetch_all(MYSQLI_ASSOC);
+                if (count($employee_rec) > 0) {
+                    //echo 'employee phone number already exists';
+                    $_SESSION["errors"]['nextphone'] = "employee next of kin phone number already exists";
+                    header('Location: ' . $_SERVER['HTTP_REFERER']);
+                    exit;
+                }
+            }
+            $sql = "INSERT INTO employees (employee_id, first_name, last_name, marital_status, gender, email, phone_number, date_of_employment, nationality, religion, state_Of_Origin, lga, next_Of_Kin_FullName, next_Of_Kin_Relationship, next_Of_Kin_Email, next_Of_Kin_Phone )
+            VALUES ( '$employeeid', '$fname', '$lname', '$mstatus', '$gender', '$email', '$phone', '$date_of_employment', '$nationality','$religion', '$stateOfOrigin', '$lga', '$nextfullname', '$nextrelation', '$nextemail', '$nextphone')";
 
             if($conn->query($sql) === TRUE){
                 //echo "New record for employee created sucessfully";
