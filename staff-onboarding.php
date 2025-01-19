@@ -1,3 +1,4 @@
+<?php ob_start();?>
 <?php session_start();?>
 <?php require_once 'db_connection.php';?>
 <!DOCTYPE html>
@@ -8,17 +9,18 @@
     <title>Document</title>
 </head>
 <body>
-    <?php if(isset($_SESSION['sucess'])){?>
-        <div class="sucess_message">
-            <p>New record for employee created</p>
+    <?php if(isset($_SESSION['sucess'])) { ?>
+        <div class="success-container">
+            <div class="success-message">
+                <p>New record for employee created successfully!</p>
+            </div>
+            <div class="button-group">
+                <a href="staff-onboarding.php" class="btn btn-primary">Add Another Employee</a>
+                <a href="employee-records.php" class="btn btn-secondary">View Employee List</a>
+            </div>
+            <?php unset($_SESSION['sucess']); ?>
         </div>
-        <div class="details-btn">
-            <a href="staff-onboarding.php"><button>Add another employee</button></a>
-            <a href="employee-records.php"><button> View employee list</button></a>
-            <?php unset($_SESSION['sucess']);?>
-        </div>
-
-    <?php }else{?>
+    <?php } else { ?>
         <form>
             <div class="form-message">Please fill all the details in the form</div>
             
@@ -309,16 +311,17 @@
 
             if($conn->query($sql) === TRUE){
                 //echo "New record for employee created sucessfully";
-                $_SESSION['sucess']= 'New record for employee created';
+                $_SESSION['sucess'] = 'New record for employee created';
                 header('Location: ' .$_SERVER['HTTP_REFERER']);
                 exit;
 
             }else{
                 echo "Error: " . $sql . "<br>" . $conn->error;
-                $conn->close();
+               // $conn->close();
             }
         }
-
+    $conn->close();
+    ob_end_flush();
     ?>
 
 </body>

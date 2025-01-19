@@ -159,6 +159,16 @@
             $month = substr($selected_month, 5, 2 );
             $year = substr($selected_month, 0, 4);
 
+            $emp_query = "SELECT id, first_name, last_name FROM employees WHERE id = $id";
+            $emp_result = $conn->query($emp_query);
+            $employee_name = "Unknown Employee";
+            $employee_id = "N/A";
+            if ($emp_result && $emp_result->num_rows > 0) {
+                $emp_data = $emp_result->fetch_assoc();
+                $employee_name = $emp_data['first_name'] . " " . $emp_data['last_name'];
+                $employee_id = $emp_data['id'];
+            }
+
             $sql = "SELECT  * FROM attendance WHERE employeeId = $id AND MONTH(date) = $month AND YEAR(date) = $year";
             $result = $conn->query($sql);
             if($result !== FALSE){
@@ -174,10 +184,17 @@
             <input type="hidden" name="id" value="<?php echo $_GET['id']?>">
             <input type="submit" value="Filter">
         </form>
+        <!-- <div class="summary-box">
+            <p>No. Days Present:<?php //echo count($emp_records)?> </p>
+            <p>No. Days Absent: <?php //echo $abs_days?></p>
+            <p>Current Month:<?php //echo date('F Y',strtotime($selected_month));?></p>
+        </div> -->
         <div class="summary-box">
-            <p>No. Days Present:<?php echo count($emp_records)?> </p>
-            <p>No. Days Absent: <?php echo $abs_days?></p>
-            <p>Current Month:<?php echo date('F Y',strtotime($selected_month));?></p>
+            <p>Employee Name: <?php echo htmlspecialchars($employee_name); ?></p>
+            <p>Employee ID: <?php echo  htmlspecialchars($employee_id ); ?></p>
+            <p>No. Days Present: <?php echo count($emp_records); ?></p>
+            <p>No. Days Absent: <?php echo $abs_days; ?></p>
+            <p>Current Month: <?php echo date('F Y', strtotime($selected_month)); ?></p>
         </div>
         <table border = "1">
             <thead>
