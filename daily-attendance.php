@@ -9,14 +9,18 @@
 <body>
     <h1>Daily Attendance</h1>
     <form action="" method="GET">
-        <input type="date" name="selected_date"  value='
+        <input type="date" name="selected_date"  value="
             <?php if(isset($_GET['selected_date'])){
                 echo $_GET['selected_date'];
-            }?>'
+            }?>"
         >
         <input type="submit" value="Select">
-        
     </form>
+        <h4 style="text-align: center; color:black">
+            <?php if(isset($_GET['selected_date'])){
+                echo date('jS F, Y', strtotime($_GET['selected_date']));
+            }?>
+        </h4>
     <style>
         /* General body styling */
         body {

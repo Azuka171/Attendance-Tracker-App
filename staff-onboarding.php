@@ -8,55 +8,69 @@
     <title>Document</title>
 </head>
 <body>
-    <form>
-        <div class="form-message">Please fill all the details in the form</div>
-        
-        <!-- <label>employeeId:</label><br>
-        <input type="number" name="eId"><br> -->
-        <label>Employee Id:</label><br>
-        <input type="text" name="employeeid" required <?php if(isset($_SESSION['previous_values'])){
-            echo 'value="'.$_SESSION['previous_values']['id'].'"';
-        } ?>><br>
-        <div class="error-message">
-            <?php if(isset($_SESSION['errors']['id'])){
-                echo $_SESSION['errors']['id'];
-                unset($_SESSION['errors']['id']);
-            }?>
+    <?php if(isset($_SESSION['sucess'])){?>
+        <div class="sucess_message">
+            <p>New record for employee created</p>
         </div>
-        <label>firstname:</label><br>
-        <input type="text" name="fname" required <?php if(isset($_SESSION['previous_values'])){
-            echo 'value="'.$_SESSION['previous_values']['fname'].'"';
-        } ?>><br>
-        <label>lastname:</label><br>
-        <input type="text" name="lname" required <?php if(isset($_SESSION['previous_values'])){
-            echo 'value="'.$_SESSION['previous_values']['lname'].'"';
-        } ?>><br>
-        <label>email Address:</label><br>
-        <input type="text" name="email" required <?php if(isset($_SESSION['previous_values'])){
-            echo 'value="'.$_SESSION['previous_values']['email'].'"';
-        } ?>><br>
-        <div class="error-message">
-            <?php if(isset($_SESSION['errors']['email'])){
-                echo $_SESSION['errors']['email'];
-                unset($_SESSION['errors']['email']);
-            }?>
+        <div class="details-btn">
+            <a href="staff-onboarding.php"><button>Add another employee</button></a>
+            <a href="employee-records.php"><button> View employee list</button></a>
+            <?php unset($_SESSION['sucess']);?>
         </div>
-        <label>phone:</label><br>
-        <input type="number" name="phone" required <?php if(isset($_SESSION['previous_values'])){
-            echo 'value="'.$_SESSION['previous_values']['phone'].'"';
-        } ?>><br>
-        <div class="error-message">
-            <?php if(isset($_SESSION['errors']['phone'])){
-                echo $_SESSION['errors']['phone'];
-                unset($_SESSION['errors']['phone']);
-            }?>
-        </div>
-        <label>Date Of Employment:</label><br>
-        <input type="date" name="doe" required <?php if(isset($_SESSION['previous_values'])){
-            echo 'value="'.$_SESSION['previous_values']['doe'].'"';
-        } ?>><br>
-        <input type="submit">
-    </form>
+
+    <?php }else{?>
+        <form>
+            <div class="form-message">Please fill all the details in the form</div>
+            
+            <!-- <label>employeeId:</label><br>
+            <input type="number" name="eId"><br> -->
+            <label>Employee Id:</label><br>
+            <input type="text" name="employeeid" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['id'].'"';
+            } ?>><br>
+            <div class="error-message">
+                <?php if(isset($_SESSION['errors']['id'])){
+                    echo $_SESSION['errors']['id'];
+                    unset($_SESSION['errors']['id']);
+                }?>
+            </div>
+            <label>firstname:</label><br>
+            <input type="text" name="fname" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['fname'].'"';
+            } ?>><br>
+            <label>lastname:</label><br>
+            <input type="text" name="lname" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['lname'].'"';
+            } ?>><br>
+            <label>email Address:</label><br>
+            <input type="text" name="email" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['email'].'"';
+            } ?>><br>
+            <div class="error-message">
+                <?php if(isset($_SESSION['errors']['email'])){
+                    echo $_SESSION['errors']['email'];
+                    unset($_SESSION['errors']['email']);
+                }?>
+            </div>
+            <label>phone:</label><br>
+            <input type="number" name="phone" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['phone'].'"';
+            } ?>><br>
+            <div class="error-message">
+                <?php if(isset($_SESSION['errors']['phone'])){
+                    echo $_SESSION['errors']['phone'];
+                    unset($_SESSION['errors']['phone']);
+                }?>
+            </div>
+            <label>Date Of Employment:</label><br>
+            <input type="date" name="doe" required <?php if(isset($_SESSION['previous_values'])){
+                echo 'value="'.$_SESSION['previous_values']['doe'].'"';
+            } ?>><br>
+            <input type="submit">
+        </form>
+    <?php } ?>
+
+
     <?php unset($_SESSION['previous_values']);?>
     <style>
         /* General Body Styling */
@@ -240,7 +254,11 @@
             VALUES ( '$employeeid', '$fname', '$lname', '$email', '$phone', '$date_of_employment')";
 
             if($conn->query($sql) === TRUE){
-                echo "New record for employee created sucessfully";
+                //echo "New record for employee created sucessfully";
+                $_SESSION['sucess']= 'New record for employee created';
+                header('Location: ' .$_SERVER['HTTP_REFERER']);
+                exit;
+
             }else{
                 echo "Error: " . $sql . "<br>" . $conn->error;
                 $conn->close();
