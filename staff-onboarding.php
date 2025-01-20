@@ -168,7 +168,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 250vh;
+            /* height: 250vh; */
         }
 
         /* Form Container Styling */

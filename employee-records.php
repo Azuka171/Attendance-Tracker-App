@@ -1,4 +1,4 @@
-<?php require_once 'db_connection.php';?>
+<?php //require_once 'db_connection.php';?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -172,7 +172,7 @@
                 employeeRow.appendChild(phone_td);
                 
                 const date_of_employment = document.createElement('td');
-                date_of_employment.innerHTML = employee.phone;
+                date_of_employment.innerHTML = employee.date_of_employment;
                 employeeRow.appendChild(date_of_employment);
 
                 const view_records = document.createElement('td');

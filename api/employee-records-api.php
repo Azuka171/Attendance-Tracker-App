@@ -11,11 +11,12 @@
             $employeeObject->employeeId = $employee[1];
             $employeeObject-> firstname = $employee[2];
             $employeeObject->lastname = $employee[3];
-            $employeeObject->email = $employee[4];
-            $employeeObject->phone = $employee[5];
-            $employeeObject->date_of_employment = $employee[6];
+            $employeeObject->email = $employee[6];
+            $employeeObject->phone = $employee[7];
+            $employeeObject->date_of_employment = $employee[8];
             $employees[] = $employeeObject;
         }
+        // print_r($employees_raw[0][8]);die;
         echo json_encode($employees);
     }else{
         echo 'error';
