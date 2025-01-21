@@ -87,7 +87,14 @@
              <label>Date Of Employment:</label><br>
             <input type="date" name="doe" required <?php if(isset($_SESSION['previous_values'])){
                 echo 'value="'.$_SESSION['previous_values']['doe'].'"';
-            } ?>><br>
+            } ?>><br><br>
+             <!-- Date of birth -->
+             <label>Date Of Birth:</label><br>
+            <input type="date" name="dob" required <?php if(isset($_SESSION['previous_values'])){
+                //echo 'value="'.$_SESSION['previous_values']['dob'].'"';
+                $dob = date('Y-m-d', strtotime($_SESSION['previous_values']['dob']));
+                echo 'value="'.$dob.'"';
+            } ?>><br><br>
 
             <!-- Nationality -->
             <label>Nationality:</label><br>
@@ -340,6 +347,7 @@
             $email = $_GET['email'];
             $phone = $_GET['phone'];
             $date_of_employment = $_GET['doe'];
+            $date_of_birth = $_GET['dob'];
             $nationality = $_GET['nationality'];
             $religion = $_GET['religion'];
             $stateOfOrigin = $_GET['stateOfOrigin'];
@@ -358,6 +366,7 @@
                 'email' => $email,
                 'phone' => $phone,
                 'doe' => $date_of_employment,
+                'dob' => $date_of_birth,
                 'nationality' => $nationality,
                 'religion' => $religion,
                 'stateOfOrigin' => $stateOfOrigin,
@@ -440,8 +449,8 @@
                     exit;
                 }
             }
-            $sql = "INSERT INTO employees (employee_id, first_name, last_name, marital_status, gender, email, phone_number, date_of_employment, nationality, religion, state_Of_Origin, lga, next_Of_Kin_FullName, next_Of_Kin_Relationship, next_Of_Kin_Email, next_Of_Kin_Phone )
-            VALUES ( '$employeeid', '$fname', '$lname', '$mstatus', '$gender', '$email', '$phone', '$date_of_employment', '$nationality','$religion', '$stateOfOrigin', '$lga', '$nextfullname', '$nextrelation', '$nextemail', '$nextphone')";
+            $sql = "INSERT INTO employees (employee_id, first_name, last_name, marital_status, gender, email, phone_number, date_of_employment, date_of_birth, nationality, religion, state_Of_Origin, lga, next_Of_Kin_FullName, next_Of_Kin_Relationship, next_Of_Kin_Email, next_Of_Kin_Phone )
+            VALUES ( '$employeeid', '$fname', '$lname', '$mstatus', '$gender', '$email', '$phone', '$date_of_employment', '$date_of_birth', '$nationality', '$religion', '$stateOfOrigin', '$lga', '$nextfullname', '$nextrelation', '$nextemail', '$nextphone')";
 
             if($conn->query($sql) === TRUE){
                 //echo "New record for employee created sucessfully";
