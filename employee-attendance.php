@@ -159,14 +159,15 @@
             $month = substr($selected_month, 5, 2 );
             $year = substr($selected_month, 0, 4);
 
-            $emp_query = "SELECT id, first_name, last_name FROM employees WHERE id = $id";
+            $emp_query = "SELECT id, employee_id, first_name, last_name, passport_photo FROM employees WHERE id = $id";
             $emp_result = $conn->query($emp_query);
             $employee_name = "Unknown Employee";
             $employee_id = "N/A";
             if ($emp_result && $emp_result->num_rows > 0) {
                 $emp_data = $emp_result->fetch_assoc();
                 $employee_name = $emp_data['first_name'] . " " . $emp_data['last_name'];
-                $employee_id = $emp_data['id'];
+                $employee_id = $emp_data['employee_id'];
+                $employee_pic = $emp_data['passport_photo'];
             }
 
             $sql = "SELECT  * FROM attendance WHERE employeeId = $id AND MONTH(date) = $month AND YEAR(date) = $year";
@@ -190,6 +191,7 @@
             <p>Current Month:<?php //echo date('F Y',strtotime($selected_month));?></p>
         </div> -->
         <div class="summary-box">
+            <img src="<?php  echo $employee_pic? $employee_pic: 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541'?>" alt="" width="100">
             <p>Employee Name: <?php echo htmlspecialchars($employee_name); ?></p>
             <p>Employee ID: <?php echo  htmlspecialchars($employee_id ); ?></p>
             <p>No. Days Present: <?php echo count($emp_records); ?></p>
