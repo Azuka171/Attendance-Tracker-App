@@ -9,7 +9,7 @@
 <body>
     <h2>Employee</h2>
     <div>
-        <input type="search">
+        <input type="search" id="search-box" onchange="searchEmp()">
         <a href="./staff-onboarding.php"><button>Add</button></a>
     </div>
     
@@ -142,13 +142,30 @@
     </style>
 
     <script>
+        let emp_records;
         const url = 'api/employee-records-api.php';
         const employeeTbody = document.getElementById("employees_records");
         fetch(url).then(response=>response.json())
         .then((data)=>{
             console.log(data);
-            //! loop through and display employees
-            data.forEach(employee => {
+            emp_records = data;
+            updateUI(emp_records);
+        }).catch(error=>console.error(error))
+
+        function searchEmp(){
+            const search_param = document.getElementById('search-box').value
+            const search_result = emp_records.filter(function (emp){
+                    let full_name = emp.lastname + " " + emp.firstname;
+                    return emp.employeeId.toLowerCase().includes(search_param.toLowerCase()) || full_name.toLowerCase().includes(search_param.toLowerCase()) || emp.email.toLowerCase().includes(search_param.toLowerCase());
+                }
+            )
+            updateUI(search_result);
+        }
+
+        function updateUI(emps){
+            employeeTbody.innerHTML = '';
+            //* loop through and display employees
+            emps.forEach(employee => {
                 const employeeRow = document.createElement('tr');
 
                 const employeeId_td = document.createElement('td');
@@ -193,11 +210,9 @@
                 view_details.appendChild(detail_link);
                 employeeRow.appendChild(view_details);
 
-
                 employeeTbody.appendChild(employeeRow);
             });
-
-        }).catch(error=>console.error(error))
+        }
     </script>
 </body>
 </html>

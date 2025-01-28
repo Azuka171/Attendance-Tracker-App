@@ -12,7 +12,8 @@
     <?php if(isset($_SESSION['sucess'])) { ?>
         <div class="success-container">
             <div class="success-message">
-                <p>New record for employee created successfully!</p>
+                <?php if(isset($_GET['mode']) && $_GET['mode'] === 'edit'){ ?> <p> employee record updated successfully!</p>
+                <?php }else{ ?><p>New record for employee created successfully!</p><?php } ?>
             </div>
             <div class="button-group">
                 <a href="staff-onboarding.php" class="btn btn-primary">Add Another Employee</a>
@@ -20,14 +21,64 @@
             </div>
             <?php unset($_SESSION['sucess']); ?>
         </div>
-    <?php } else { ?>
+    <?php } else{ 
+    
+        if(isset($_GET['id']) && isset($_GET['mode']) && $_GET['mode']==='edit'){
+            //only works in edit mode
+            
+            // 1. sql call to get user details
+            $id = $_GET['id']; 
+           
+            $emp_query = "SELECT * FROM employees WHERE id = $id";
+            $emp_result = $conn->query($emp_query);
+            // $employee_name = "Unknown Employee";
+            // $employee_id = "N/A";
+            if ($emp_result && $emp_result->num_rows > 0) {
+                $emp_data = $emp_result->fetch_assoc();
+
+                // 2. set previous_values session variables using the gotten details
+                $_SESSION['previous_values'] = [
+                    'id' => $emp_data["id"],
+                    'employeeid' => $emp_data["employee_id"],
+                    'fname' => $emp_data["first_name"],
+                    'lname' => $emp_data["last_name"],
+                    'mstatus' => $emp_data["marital_status"],
+                    'gender' => $emp_data["gender"],
+                    'email' => $emp_data["email"],
+                    'phone' => $emp_data["phone_number"],
+                    'doe' => $emp_data["date_of_employment"],
+                    'dob' => $emp_data["date_of_birth"],
+                    'nationality' => $emp_data["nationality"],
+                    'religion' => $emp_data["religion"],
+                    'stateOfOrigin' => $emp_data["state_Of_Origin"],
+                    'lga' =>$emp_data["lga"],
+                    'nextfullname' =>$emp_data["next_Of_Kin_FullName"],
+                    'nextrelation' => $emp_data["next_Of_Kin_Relationship"],
+                    'nextemail' => $emp_data["next_Of_Kin_Email"],
+                    'nextphone' => $emp_data["next_Of_Kin_Phone"],
+                    'passport_photo' => $emp_data["passport_photo"],
+                    'certificate_doc' => $emp_data["certificate_path"],
+                ];
+            }else{
+                echo "Error". $sql . "<br>" . $conn->error;
+                $conn->close();
+            }
+        }
+        ?>
         <form action="" method="post" enctype="multipart/form-data">
-            <div class="form-message">Please fill all the details in the form</div>
+            <!-- php if  are we iuin edit mode?-->
+            <?php if(isset($_GET['id']) && isset($_GET['mode']) && $_GET['mode'] === 'edit'){?>
+                <div class="form-message">Edit the Employee details</div>
+            <?php }else{ ?>
+                <div class="form-message">Please fill all the details in the form to create a new employee</div>
+            <?php } ?>
+             <!-- if true -->
+              <!-- else: -->
 
             <!-- Employee ID -->
             <label>Employee Id:</label><br>
             <input type="text" name="employeeid" required <?php if(isset($_SESSION['previous_values'])){
-                echo 'value="'.$_SESSION['previous_values']['id'].'"';
+                echo 'value="'.$_SESSION['previous_values']['employeeid'].'"';
             } ?>><br>
             <div class="error-message">
                 <?php if(isset($_SESSION['errors']['id'])){
@@ -157,18 +208,17 @@
                 }?>
             </div>
             <label>Upload your Passport Photograph:</label><br>
-            <input type="file" name="passport_photo" id="passport_photo" accept=".jpg,.png,.jpeg">
-            <?php if(isset($_SESSION['previous_values'])){
+            <input type="file" name="passport_photo" id="passport_photo" accept=".jpg,.png,.jpeg"  <?php if(isset($_SESSION['previous_values'])){
                 echo 'value="'.$_SESSION['previous_values']['passport_photo'].'"';
-            } ?><br>
+            } ?>>
+           <br><br>
             <label>Upload your Certificate:</label><br>
-            <input type="file" name="certificate_doc" id="certificate_doc" accept=".pdf,">
-            <?php if(isset($_SESSION['previous_values'])){
+            <input type="file" name="certificate_doc" id="certificate_doc" accept=".pdf,"<?php if(isset($_SESSION['previous_values'])){
                 echo 'value="'.$_SESSION['previous_values']['certificate_doc'].'"';
-            } ?><br>
+            } ?>>
+            <br>
 
-
-            <input type="submit" name="submit">
+            <input type="submit" name="submit" <?php if(isset($_GET['id']) && isset($_GET['mode']) && $_GET['mode']){echo "value='save'";} ?>>
         </form>
     <?php } ?>
 
@@ -346,6 +396,8 @@
           
         // $conn->close();
         //reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        
+
 
         if(isset($_POST["submit"])){
             // $emp = $_POST['eId'];
@@ -371,7 +423,7 @@
 
 
             $_SESSION['previous_values'] = [
-                'id' => $employeeid,
+                'employeeid' => $employeeid,
                 'fname' => $fname,
                 'lname' => $lname,
                 'mstatus' => $mstatus,
@@ -392,122 +444,125 @@
                 'certificate_doc' => $certificate
             ];
 
-            $sql = "SELECT *
-                FROM employees e 
-                WHERE e.employee_id = '$employeeid'
-            ";
-            $result = $conn->query($sql);
-            if($result !== FALSE ){
-                $employee_rec = $result->fetch_all(MYSQLI_ASSOC);
-                if (count($employee_rec) > 0) {
-                    //echo 'employee id already exists';
-                    $_SESSION["errors"]['id'] = "employee id already exists";
-                    header('Location: ' . $_SERVER['HTTP_REFERER']);
-                    exit;
-                } 
-            }
-            $sql = "SELECT *
-                FROM employees e 
-                WHERE e.email = '$email'
-            ";
-            $result = $conn->query($sql);
-            if($result !== FALSE ){
-                $employee_rec = $result->fetch_all(MYSQLI_ASSOC);
-                if (count($employee_rec) > 0) {
-                    echo 'employee email already exists';
-                    $_SESSION["errors"]['email'] = "employee email already exists";
-                    header('Location: ' . $_SERVER['HTTP_REFERER']);
-                    exit;
-
+            if (!isset($_GET['mode'])) {
+                
+                $sql = "SELECT *
+                    FROM employees e 
+                    WHERE e.employee_id = '$employeeid'
+                ";
+                $result = $conn->query($sql);
+                if($result !== FALSE ){
+                    $employee_rec = $result->fetch_all(MYSQLI_ASSOC);
+                    if (count($employee_rec) > 0) {
+                        //echo 'employee id already exists';
+                        $_SESSION["errors"]['id'] = "employee id already exists";
+                        header('Location: ' . $_SERVER['HTTP_REFERER']);
+                        exit;
+                    } 
+                }
+                $sql = "SELECT *
+                    FROM employees e 
+                    WHERE e.email = '$email'
+                ";
+                $result = $conn->query($sql);
+                if($result !== FALSE ){
+                    $employee_rec = $result->fetch_all(MYSQLI_ASSOC);
+                    if (count($employee_rec) > 0) {
+                        echo 'employee email already exists';
+                        $_SESSION["errors"]['email'] = "employee email already exists";
+                        header('Location: ' . $_SERVER['HTTP_REFERER']);
+                        exit;
+    
+                    }
+                }
+                
+                $sql = "SELECT *
+                    FROM employees e 
+                    WHERE e.phone_number = '$phone'
+                ";
+                $result = $conn->query($sql);
+                if($result !== FALSE ){
+                    $employee_rec = $result->fetch_all(MYSQLI_ASSOC);
+                    if (count($employee_rec) > 0) {
+                        //echo 'employee phone number already exists';
+                        $_SESSION["errors"]['phone'] = "employee phone number already exists";
+                        header('Location: ' . $_SERVER['HTTP_REFERER']);
+                        exit;
+                    }
+                }
+                //code for file uploads
+                $target_dir = "uploads/passport_photos/";
+                $target_file = $target_dir .time()."_".str_replace(" ", "_",basename($_FILES["passport_photo"]["name"]));
+                $uploadOk = 1;
+                $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+                
+                $check = getimagesize($_FILES["passport_photo"]["tmp_name"]);
+                //echo print_r($check).'<br>';
+                if($check !== false){
+                    echo "file is an image - " . $check["mime"] . ".";
+                    $uploadOk = 1;
+                }else{
+                    echo "File is not an image.";
+                    $uploadOk = 0;
+                }
+                if(move_uploaded_file($_FILES["passport_photo"]["tmp_name"], $target_file)){
+                    echo "The file". htmlspecialchars(basename($_FILES["passport_photo"]["name"])). "has been uploaded";
+                }else{
+                    echo "sorry, there was an error uploading your file";
+                }
+                $certificate_dir = "uploads/certificates/";
+                $certificate_file  = $certificate_dir .time()."_".str_replace(" ", "_",basename($_FILES["certificate_doc"]["name"]));
+                //$certificate_file = $certificate_dir .time(). basename($_FILES["certificate_doc"]["name"]);
+                $uploadOk = 1;
+                $imageFileType = strtolower(pathinfo($certificate_file, PATHINFO_EXTENSION));
+                
+                $check = getimagesize($_FILES["certificate_doc"]["tmp_name"]);
+                //echo print_r($check).'<br>';
+                if($check !== false){
+                    echo "certificate uploaded - " . $check["mime"] . ".";
+                    $uploadOk = 1;
+                }else{
+                    echo "certificate not uploaded.";
+                    $uploadOk = 0;
+                }
+                if(move_uploaded_file($_FILES["certificate_doc"]["tmp_name"], $certificate_file)){
+                    echo "The file". htmlspecialchars(basename($_FILES["certificate_doc"]["name"])). "has been uploaded";
+                }else{
+                    echo "sorry, there was an error uploading your certificate";
                 }
             }
-            // $sql = "SELECT *
-            //     FROM employees e 
-            //     WHERE e.next_Of_Kin_Email = '$nextemail'
-            // ";
-            // $result = $conn->query($sql);
-            // if($result !== FALSE ){
-            //     $employee_rec = $result->fetch_all(MYSQLI_ASSOC);
-            //     if (count($employee_rec) > 0) {
-            //         //echo 'employee next of kin email already exists';
-            //         $_SESSION["errors"]['nextemail'] = "employee next of kin email already exists";
-            //         header('Location: ' . $_SERVER['HTTP_REFERER']);
-            //         exit;
-
-            //     }
-            // }
-            $sql = "SELECT *
-                FROM employees e 
-                WHERE e.phone_number = '$phone'
-            ";
-            $result = $conn->query($sql);
-            if($result !== FALSE ){
-                $employee_rec = $result->fetch_all(MYSQLI_ASSOC);
-                if (count($employee_rec) > 0) {
-                    //echo 'employee phone number already exists';
-                    $_SESSION["errors"]['phone'] = "employee phone number already exists";
-                    header('Location: ' . $_SERVER['HTTP_REFERER']);
-                    exit;
-                }
-            }
-            // $sql = "SELECT *
-            //     FROM employees e 
-            //     WHERE e.next_Of_Kin_Phone = '$nextphone'
-            // ";
-            // $result = $conn->query($sql);
-            // if($result !== FALSE ){
-            //     $employee_rec = $result->fetch_all(MYSQLI_ASSOC);
-            //     if (count($employee_rec) > 0) {
-            //         //echo 'employee phone number already exists';
-            //         $_SESSION["errors"]['nextphone'] = "employee next of kin phone number already exists";
-            //         header('Location: ' . $_SERVER['HTTP_REFERER']);
-            //         exit;
-            //     }
-            // }
-            //code for file uploads
-            $target_dir = "uploads/passport_photos/";
-            $target_file = $target_dir .time()."_".str_replace(" ", "_",basename($_FILES["passport_photo"]["name"]));
-            $uploadOk = 1;
-            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-            
-            $check = getimagesize($_FILES["passport_photo"]["tmp_name"]);
-            //echo print_r($check).'<br>';
-            if($check !== false){
-                echo "file is an image - " . $check["mime"] . ".";
-                $uploadOk = 1;
-            }else{
-                echo "File is not an image.";
-                $uploadOk = 0;
-            }
-            if(move_uploaded_file($_FILES["passport_photo"]["tmp_name"], $target_file)){
-                echo "The file". htmlspecialchars(basename($_FILES["passport_photo"]["name"])). "has been uploaded";
-            }else{
-                echo "sorry, there was an error uploading your file";
-            }
-            $certificate_dir = "uploads/certificates/";
-            $certificate_file  = $certificate_dir .time()."_".str_replace(" ", "_",basename($_FILES["certificate_doc"]["name"]));
-            //$certificate_file = $certificate_dir .time(). basename($_FILES["certificate_doc"]["name"]);
-            $uploadOk = 1;
-            $imageFileType = strtolower(pathinfo($certificate_file, PATHINFO_EXTENSION));
-            
-            $check = getimagesize($_FILES["certificate_doc"]["tmp_name"]);
-            //echo print_r($check).'<br>';
-            if($check !== false){
-                echo "certificate uploaded - " . $check["mime"] . ".";
-                $uploadOk = 1;
-            }else{
-                echo "certificate not uploaded.";
-                $uploadOk = 0;
-            }
-            if(move_uploaded_file($_FILES["certificate_doc"]["tmp_name"], $certificate_file)){
-                echo "The file". htmlspecialchars(basename($_FILES["certificate_doc"]["name"])). "has been uploaded";
-            }else{
-                echo "sorry, there was an error uploading your certificate";
-            }
+       
         
             // send to db
+            // check if you are in edit mode
+            if (isset($_GET['id']) && isset($_GET['mode']) && $_GET['mode']) {
+                $update_id = $_GET['id']; 
+                $sql = "UPDATE employees SET 
+                    first_name = '$fname',
+                    last_name = '$lname',
+                    marital_status = '$mstatus',
+                    gender = '$gender',
+                    email = '$email',
+                    phone_number = '$phone',
+                    date_of_employment = '$date_of_employment',
+                    date_of_birth = '$date_of_birth',
+                    nationality = '$nationality',
+                    religion = '$religion',
+                    state_Of_Origin = '$stateOfOrigin',
+                    lga = '$lga',
+                    next_Of_Kin_FullName = '$nextfullname',
+                    next_Of_Kin_Relationship = '$nextrelation',
+                    next_Of_Kin_Email = '$nextemail',
+                    next_Of_Kin_Phone = '$nextphone',
+                    passport_photo = '$target_file',
+                    certificate_path = '$certificate_file'
+                    WHERE id='$update_id';
+                ";
+            }else{
             $sql = "INSERT INTO employees (employee_id, first_name, last_name, marital_status, gender, email, phone_number, date_of_employment, date_of_birth, nationality, religion, state_Of_Origin, lga, next_Of_Kin_FullName, next_Of_Kin_Relationship, next_Of_Kin_Email, next_Of_Kin_Phone, passport_photo, certificate_path)
             VALUES ( '$employeeid', '$fname', '$lname', '$mstatus', '$gender', '$email', '$phone', '$date_of_employment', '$date_of_birth', '$nationality', '$religion', '$stateOfOrigin', '$lga', '$nextfullname', '$nextrelation', '$nextemail', '$nextphone',  '$target_file', '$certificate_file')";
+              
+            }
 
             if($conn->query($sql) === TRUE){
                 //echo "New record for employee created sucessfully";
