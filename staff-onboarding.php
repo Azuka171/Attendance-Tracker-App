@@ -208,9 +208,7 @@
                 }?>
             </div>
             <label>Upload your Passport Photograph:</label><br>
-            <input type="file" name="passport_photo" id="passport_photo" accept=".jpg,.png,.jpeg"  <?php if(isset($_SESSION['previous_values'])){
-                echo 'value="'.$_SESSION['previous_values']['passport_photo'].'"';
-            } ?>>
+            <input type="file" name="passport_photo" id="passport_photo" accept=".jpg,.png,.jpeg">
            <br><br>
             <label>Upload your Certificate:</label><br>
             <input type="file" name="certificate_doc" id="certificate_doc" accept=".pdf,"<?php if(isset($_SESSION['previous_values'])){
@@ -418,8 +416,8 @@
             $nextrelation = $_POST['nextrelation'];
             $nextemail = $_POST['nextemail'];
             $nextphone= $_POST['nextphone'];
-            $fileimage= $_POST['passport_photo'];
-            $certificate= $_POST['certificate_path'];
+            $fileimage= isset($_POST['passport_photo']) ? $_POST['passport_photo'] : null;
+            $certificate= isset($_POST['certificate_path']) ? $_POST['certificate_path'] : null;
 
 
             $_SESSION['previous_values'] = [
@@ -537,6 +535,54 @@
             // check if you are in edit mode
             if (isset($_GET['id']) && isset($_GET['mode']) && $_GET['mode']) {
                 $update_id = $_GET['id']; 
+
+                // check if there is a value in passport
+                //if there is include it in the sql string
+
+                // $full_name = $firstname." ".$middlename." ".$lastname;
+                // $full_name = $firstname." ".(isset($middlename)? $middlename :'')." ".$lastname;
+
+                // $full_name = "Azuka $middlename Gideon";
+                // $full_name = "Azuka ".(isset($middlename)? $middlename :'')." Gideon";
+
+
+                // $example_sql = "SELECT 'name', company_address FROM employers";
+                // $example_sql = "SELECT 'name'".($employment_type !== 'remote'?',company_address':'')." FROM employers";
+
+                // $example_sql = "UPDATE companys SET 'name'='$company_name', company_address='$company_address' WHERE user_id=$user_id";
+
+                // $example_sql = "UPDATE company SET 'name'='$company_name'".($employment_type!==='remote'?", company_address='$compony_address'":'')."WHERE user_id=$user_id";
+                // "SELECT 'name', 'company_address' FROM employer";
+                // "SELECT 'name'  FROM employer";
+                
+                //$sql = "UPDATE employess SET 'passport_photo' = '$target_file'";
+                $updated_passport = false;
+                echo $_POST["passport_photo"];die;
+                if (isset($_POST["passport_photo"])) {
+                    // echo 'user updated  their profile pic';die;
+                    $passport_dir = "uploads/passport_photos/";
+                    $updated_passport = $passport_dir .time()."_".str_replace(" ", "_",basename($_FILES["passport_photo"]["name"]));
+                    $uploadOk = 1;
+                    
+                    $check = getimagesize($_FILES["passport_photo"]["tmp_name"]);
+                    //echo print_r($check).'<br>';
+                    if($check !== false){
+                        // echo "file is an image - " . $check["mime"] . ".";
+                        $uploadOk = 1;
+                    }else{
+                        echo "Passport uploaded is not an image.";
+                        $uploadOk = 0;
+                    }
+                    if(move_uploaded_file($_FILES["passport_photo"]["tmp_name"], $updated_passport)){
+                        echo "The file". htmlspecialchars(basename($_FILES["passport_photo"]["name"])). "has been uploaded";
+                    }else{
+                        echo "sorry, there was an error uploading your file";
+                    }
+
+                }
+                
+
+
                 $sql = "UPDATE employees SET 
                     first_name = '$fname',
                     last_name = '$lname',
@@ -553,14 +599,14 @@
                     next_Of_Kin_FullName = '$nextfullname',
                     next_Of_Kin_Relationship = '$nextrelation',
                     next_Of_Kin_Email = '$nextemail',
-                    next_Of_Kin_Phone = '$nextphone',
-                    passport_photo = '$target_file',
-                    certificate_path = '$certificate_file'
+                    next_Of_Kin_Phone = '$nextphone'
+                    ".($updated_passport? ", passport_photo = '$updated_passport' ":'')."
                     WHERE id='$update_id';
                 ";
+                echo $updated_passport; die;
             }else{
-            $sql = "INSERT INTO employees (employee_id, first_name, last_name, marital_status, gender, email, phone_number, date_of_employment, date_of_birth, nationality, religion, state_Of_Origin, lga, next_Of_Kin_FullName, next_Of_Kin_Relationship, next_Of_Kin_Email, next_Of_Kin_Phone, passport_photo, certificate_path)
-            VALUES ( '$employeeid', '$fname', '$lname', '$mstatus', '$gender', '$email', '$phone', '$date_of_employment', '$date_of_birth', '$nationality', '$religion', '$stateOfOrigin', '$lga', '$nextfullname', '$nextrelation', '$nextemail', '$nextphone',  '$target_file', '$certificate_file')";
+                $sql = "INSERT INTO employees (employee_id, first_name, last_name, marital_status, gender, email, phone_number, date_of_employment, date_of_birth, nationality, religion, state_Of_Origin, lga, next_Of_Kin_FullName, next_Of_Kin_Relationship, next_Of_Kin_Email, next_Of_Kin_Phone, passport_photo, certificate_path)
+                VALUES ( '$employeeid', '$fname', '$lname', '$mstatus', '$gender', '$email', '$phone', '$date_of_employment', '$date_of_birth', '$nationality', '$religion', '$stateOfOrigin', '$lga', '$nextfullname', '$nextrelation', '$nextemail', '$nextphone',  '$target_file', '$certificate_file')";
               
             }
 
