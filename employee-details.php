@@ -109,7 +109,7 @@
         ?>
         <!-- <h1></?php echo  $employee_name; ?></h1> -->
         <div class="summary-box">
-            <img src="<?php  echo $emp_data['passport_photo'] ?  $emp_data['employee_pic'] : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541' ?>" alt="" width="100">
+            <img src="<?php  echo $emp_data['passport_photo'] ?  $emp_data['passport_photo'] : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541';?>" alt="" width="100">
             <p>Employee Name: <?php echo htmlspecialchars($employee_name); ?></p>
             <p>Employee ID: <?php echo  htmlspecialchars($emp_data['employee_id'] ); ?></p>
             <p>Employee Marital Status: <?php echo  htmlspecialchars($emp_data['marital_status'] ); ?></p>

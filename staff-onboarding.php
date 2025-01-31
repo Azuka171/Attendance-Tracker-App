@@ -211,9 +211,7 @@
             <input type="file" name="passport_photo" id="passport_photo" accept=".jpg,.png,.jpeg">
            <br><br>
             <label>Upload your Certificate:</label><br>
-            <input type="file" name="certificate_doc" id="certificate_doc" accept=".pdf,"<?php if(isset($_SESSION['previous_values'])){
-                echo 'value="'.$_SESSION['previous_values']['certificate_doc'].'"';
-            } ?>>
+            <input type="file" name="certificate_doc" id="certificate_doc" accept=".pdf,">
             <br>
 
             <input type="submit" name="submit" <?php if(isset($_GET['id']) && isset($_GET['mode']) && $_GET['mode']){echo "value='save'";} ?>>
@@ -396,6 +394,8 @@
         //reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         
 
+        // echo print_r($_POST);die;
+
 
         if(isset($_POST["submit"])){
             // $emp = $_POST['eId'];
@@ -557,8 +557,8 @@
                 
                 //$sql = "UPDATE employess SET 'passport_photo' = '$target_file'";
                 $updated_passport = false;
-                echo $_POST["passport_photo"];die;
-                if (isset($_POST["passport_photo"])) {
+                // echo $_FILES["passport_photo"];die;
+                if (isset($_FILES["passport_photo"])) {
                     // echo 'user updated  their profile pic';die;
                     $passport_dir = "uploads/passport_photos/";
                     $updated_passport = $passport_dir .time()."_".str_replace(" ", "_",basename($_FILES["passport_photo"]["name"]));
@@ -603,7 +603,7 @@
                     ".($updated_passport? ", passport_photo = '$updated_passport' ":'')."
                     WHERE id='$update_id';
                 ";
-                echo $updated_passport; die;
+                // echo $updated_passport; die;
             }else{
                 $sql = "INSERT INTO employees (employee_id, first_name, last_name, marital_status, gender, email, phone_number, date_of_employment, date_of_birth, nationality, religion, state_Of_Origin, lga, next_Of_Kin_FullName, next_Of_Kin_Relationship, next_Of_Kin_Email, next_Of_Kin_Phone, passport_photo, certificate_path)
                 VALUES ( '$employeeid', '$fname', '$lname', '$mstatus', '$gender', '$email', '$phone', '$date_of_employment', '$date_of_birth', '$nationality', '$religion', '$stateOfOrigin', '$lga', '$nextfullname', '$nextrelation', '$nextemail', '$nextphone',  '$target_file', '$certificate_file')";
@@ -622,7 +622,7 @@
                // $conn->close();
             }
         }else{
-            echo print_r(isset($_POST['submit']));die;
+            // echo print_r(isset($_POST['submit']));die;
         }
     $conn->close();
     ob_end_flush();
