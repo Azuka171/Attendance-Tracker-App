@@ -4,16 +4,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
 </head>
 <body>
-    <form action="" method="POST">
-        <label for="">Email</label><br>
-        <input type="text" name="email"><br>
-        <label for="">Password</label><br>
-        <input type="password" name="password"><br>
-        <input type="submit" name="submit" value="Login"><br>
-    </form>
+    <div class="container">
+        <div class="login-form">
+            <h2>Login</h2>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="text" name="email" id="email">
+                    <small class="error" id="emailError">Enter a valid email.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" id="password">
+                    <small class="error" id="passwordError">Password is required.</small>
+                </div>
+
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </div>
+    </div>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .login-form {
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background: #007BFF;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+            display: none;
+        }
+    </style>
     <?php
         if(isset($_POST['submit'])){
             $email = $_POST['email'];
@@ -34,8 +113,37 @@
                 $conn->close();
             }
         }
-
     ?>
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            let isValid = true;
 
+            // Get field values
+            let email = document.getElementById("email").value.trim();
+            let password = document.getElementById("password").value.trim();
+
+            // Email validation
+            let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email.match(emailPattern)) {
+                document.getElementById("emailError").style.display = "block";
+                isValid = false;
+            } else {
+                document.getElementById("emailError").style.display = "none";
+            }
+
+            // Password validation
+            if (password === "") {
+                document.getElementById("passwordError").style.display = "block";
+                isValid = false;
+            } else {
+                document.getElementById("passwordError").style.display = "none";
+            }
+
+            // Prevent form submission if validation fails
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html>
