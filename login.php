@@ -11,7 +11,7 @@
         <div class="login-form">
             <h2>Login</h2>
 
-            <form id="loginForm">
+            <form id="loginForm" method="POST">
                 <div class="form-group">
                     <label>Email</label>
                     <input type="text" name="email" id="email">
@@ -24,7 +24,7 @@
                     <small class="error" id="passwordError">Password is required.</small>
                 </div>
 
-                <button type="submit" class="btn">Login</button>
+                <input type="submit" class="btn" name="submit" value="login">
             </form>
         </div>
     </div>
@@ -97,11 +97,14 @@
         if(isset($_POST['submit'])){
             $email = $_POST['email'];
             $password  = $_POST['password'];
-            $sql = " SELECT * FROM users WHERE email = '$email' AND `password` = '$password'";
+            $sql = " SELECT * FROM users WHERE email = '$email'";
             $result = $conn->query($sql);
             $emp = $result->fetch_assoc();
-            // echo print_r(count($emp)>0);die;
-            if($result !== FALSE && $emp!==null){
+            // echo print_r($emp);die;
+            $hashed_pass = $emp['password'];
+
+
+            if($result !== FALSE && password_verify($password, $hashed_pass)){
                 echo "login successful";
                 // $_SESSION['sucess'] = 'New record for employee created';
                 // header('Location: ' .$_SERVER['HTTP_REFERER']);

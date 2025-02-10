@@ -122,7 +122,7 @@
                     unset($_SESSION['errors']['email']);
                 }?>
             </div>
-
+T
             <!-- Phone -->
             <label>Phone:</label><br>
             <input type="tel" name="phone" required <?php if(isset($_SESSION['previous_values'])){
