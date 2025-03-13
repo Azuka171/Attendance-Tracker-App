@@ -533,13 +533,14 @@ T
         
             // send to db
             // check if you are in edit mode
-            if (isset($_GET['id']) && isset($_GET['mode']) && $_GET['mode']) {
+            if (isset($_GET['id']) && isset($_GET['mode']) && $_GET['mode']=='edit') {
                 $update_id = $_GET['id']; 
 
                 //$sql = "UPDATE employess SET 'passport_photo' = '$target_file'";
                 $updated_passport = false;
-                // echo $_FILES["passport_photo"];die;
-                if (isset($_FILES["passport_photo"])) {
+                // print_r($_FILES["passport_photo"]);
+                // echo '---------------------------------------';die;
+                if (isset($_FILES["passport_photo"]) && $_FILES["passport_photo"]["size"] > 0) {
                     // echo 'user updated  their profile pic';die;
                     $passport_dir = "uploads/passport_photos/";
                     $updated_passport = $passport_dir .time()."_".str_replace(" ", "_",basename($_FILES["passport_photo"]["name"]));
@@ -562,20 +563,22 @@ T
 
                 }
                 $updated_certificate = false;
-                if (isset($_FILES["certificate_path"])) {
+                // print_r($_FILES["certificate_doc"]);
+                // echo '---------------------------------------';die;
+                if (isset($_FILES["certificate_doc"]) && $_FILES["certificate_doc"]["size"] > 0) {
                     $certificate_dir = "uploads/certificates/";
-                    $updated_certificate = $certificate_dir .time()."_".str_replace(" ", "_",basename($_FILES["certificate_path"]["name"]));
+                    $updated_certificate = $certificate_dir .time()."_".str_replace(" ", "_",basename($_FILES["certificate_doc"]["name"]));
                     $uploadOk = 1;
                     
-                    $check = getimagesize($_FILES["certificate_path"]["tmp_name"]);
+                    $check = getimagesize($_FILES["certificate_doc"]["tmp_name"]);
                     if($check !== false){
                         $uploadOk = 1;
                     }else{
                         echo "certificate uploaded is a pdf.";
                         $uploadOk = 0;
                     }
-                    if(move_uploaded_file($_FILES["certificate_path"]["tmp_name"], $updated_certificate)){
-                        echo "The file". htmlspecialchars(basename($_FILES["certificate_path"]["name"])). "has been uploaded";
+                    if(move_uploaded_file($_FILES["certificate_doc"]["tmp_name"], $updated_certificate)){
+                        echo "The file". htmlspecialchars(basename($_FILES["certificate_doc"]["name"])). "has been uploaded";
                     }else{
                         echo "sorry, there was an error uploading your file";
                     }
@@ -603,6 +606,8 @@ T
                     ".($updated_certificate? ", certificate_path = '$updated_certificate' ":'')."
                     WHERE id='$update_id';
                 ";
+                // echo "<br><br><br><br>";
+                // print_r($sql);die;
                 // echo $updated_passport; die;
             }else{
                 $sql = "INSERT INTO employees (employee_id, first_name, last_name, marital_status, gender, email, phone_number, date_of_employment, date_of_birth, nationality, religion, state_Of_Origin, lga, next_Of_Kin_FullName, next_Of_Kin_Relationship, next_Of_Kin_Email, next_Of_Kin_Phone, passport_photo, certificate_path)

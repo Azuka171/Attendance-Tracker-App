@@ -1,4 +1,6 @@
-<?php //require_once 'db_connection.php';?>
+<?php require_once 'db_connection.php';?>
+<?php session_start();?>
+<?php require_once 'session-test.php';?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
