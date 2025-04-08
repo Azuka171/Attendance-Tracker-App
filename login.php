@@ -6,40 +6,48 @@
 ?>
 
 <?php
+    $message = '';
     if(isset($_POST['submit'])){
         $email = $_POST['email'];
         $password  = $_POST['password'];
         $sql = " SELECT * FROM users WHERE email = '$email'";
         $result = $conn->query($sql);
         $emp = $result->fetch_assoc();
-        // echo print_r($emp);die;
-        $hashed_pass = $emp['password'];
+        // echo print_r($emp['password']);die;
+        if (!empty($emp)) {
+            # code...
+            $hashed_pass = $emp['password'];
 
-
-        if($result !== FALSE && password_verify($password, $hashed_pass)){
-            echo "login successful";
-            $tokenV = bin2hex(random_bytes(8));
-            $expires_at = time() + (10 * 60); // Unix timestamp.
-            // Convert Unix timestamp to DATETIME format
-            $expires_at = date('Y-m-d H:i:s', $expires_at);
-            $_SESSION['token'] = $tokenV;
-            $userId = $emp['id'];
-            // print_r($emp);
-            $seshSql = "DELETE FROM sessions WHERE userId = $userId";
-            $conn->query($seshSql);
-            $seshSql = "INSERT INTO sessions (token, userId, expires_at) VALUES ('$tokenV', $userId, '$expires_at')";
-            echo '<br><br>'.$seshSql.'<br><br>';
-            $conn->query($seshSql);
-
-            // $_SESSION['sucess'] = 'New record for employee created';
-            // header('Location: ' .$_SERVER['HTTP_REFERER']);
-            header('Location: ./employee-records.php');
-            exit;
-
+            if($result !== FALSE && password_verify($password, $hashed_pass)){
+                $message = '<div class="success-msg">Login successful</div>';
+                echo $message;
+                $tokenV = bin2hex(random_bytes(8));
+                $expires_at = time() + (10 * 60); // Unix timestamp.
+                // Convert Unix timestamp to DATETIME format
+                $expires_at = date('Y-m-d H:i:s', $expires_at);
+                $_SESSION['token'] = $tokenV;
+                $userId = $emp['id'];
+                // print_r($emp);
+                $seshSql = "DELETE FROM sessions WHERE userId = $userId";
+                $conn->query($seshSql);
+                $seshSql = "INSERT INTO sessions (token, userId, expires_at) VALUES ('$tokenV', $userId, '$expires_at')";
+                echo '<br><br>'.$seshSql.'<br><br>';
+                $conn->query($seshSql);
+    
+                // $_SESSION['sucess'] = 'New record for employee created';
+                // header('Location: ' .$_SERVER['HTTP_REFERER']);
+                header('Location: ./employee-records.php');
+                exit;
+    
+            }else{
+                $message = '<div class="error-msg">Login Unsuccessful</div>';
+                echo $message;
+               // echo "login unsuccessful";
+                // echo "Error: " . $sql . "<br>" . $conn->error;
+                $conn->close();
+            }
         }else{
-            echo "login unsuccessful";
-            // echo "Error: " . $sql . "<br>" . $conn->error;
-            $conn->close();
+            $message = '<div class="success-msg">User not found</div>';
         }
     }
 ?>
@@ -80,6 +88,7 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -177,6 +186,26 @@
             width: 24px;
             height: 24px;
             fill: #080341;
+        }
+        .success-msg {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px 20px;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            margin-bottom: 0px;
+        
+            font-weight: bold;
+        }
+
+        .error-msg {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px 20px;
+            border: 1px solid #f5c6cb;
+            border-radius: 6px;
+            margin-bottom:0px;
+            font-weight: bold;
         }
     </style>
     <script>
