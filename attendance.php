@@ -3,7 +3,7 @@
 
 if(isset($_POST['employeeId'])){ 
     $emID = $_POST['employeeId'];
-    $sql = "SELECT * FROM employees WHERE employeeId = $emID";
+    $sql = "SELECT * FROM employees WHERE employee_id = '$emID'";
     $result = $conn->query($sql);
     if($result !== FALSE){
         $emp = $result->fetch_all(MYSQLI_ASSOC);
@@ -12,12 +12,14 @@ if(isset($_POST['employeeId'])){
         $conn->close();
     }
     if($emp){
+        // print_r($emp[0]["id"]);
+        $emID = $emp[0]['id'];
         // at this point we have confirmed that the employee is a real one
         // search the attandance table and find if the emp has an attendance for that day
         // the result: id,date,timein,timeout,employeeId or empty result
         // test if timeout is null, if it is null it means the emp has not signed out for the day
         $today = date('Y-m-d');
-        $attendanceSql = "SELECT * FROM attendance WHERE employeeId = $emID AND date = '$today'";
+        $attendanceSql = "SELECT * FROM attendance WHERE employeeId = '$emID' AND date = '$today'";
         $attendanceResult = $conn->query($attendanceSql);
             if($attendanceResult !== FALSE){
                 // $attendance = $attendanceResult->fetch_all(MYSQLI_ASSOC);
@@ -297,8 +299,10 @@ if(isset($_POST['employeeId'])){
         
         //const officelat = 6.1854861 ;
         //const officeLong = 6.735517;
-        const lat_dif = 0.0039682;
-        const lon_dif = 0.0093421;
+        const lat_dif = 0.1;
+        const lon_dif = 0.1;
+        // const lat_dif = 0.0039682;
+        // const lon_dif = 0.0093421;
         const max_lat = officelat + lat_dif
         const min_lat = officelat - lat_dif
         const max_lon = officeLong + lon_dif

@@ -2,11 +2,26 @@
 <?php
    if(isset($_POST["empID"])){
         $employeeID = $_POST["empID"];
+        // $employee_sql_get = "SELECT * FROM employees WHERE employee_id = '$employeeID'";
+        // $employee_result = $conn->query($employee_sql_get);
+        // $employee_d = $employee_result->fetch_assoc();
+        // return print_r($employeeID);die();
+        // if (!$employee_d) {
+        //     return 'Invalid ID';
+        // } else {
+
+        //    $employeeID = $employee_d->fetch_assoc()[0]["id"];
+        // }
+        
+
+
+
         // echo 'I can hear you now';
         // exit;
         
         $today = date('Y-m-d');
-        $attendanceSql = "SELECT * FROM attendance WHERE employeeId = $employeeID AND date = '$today'";
+        $now_time = time();
+        $attendanceSql = "SELECT * FROM attendance WHERE employeeId = '$employeeID' AND date = '$today'";
         $result = $conn->query($attendanceSql);
         if($result !== FALSE){
             $attendanceRec = $result->fetch_assoc();
@@ -27,7 +42,7 @@
                 }
             }else{
                 //no record found for user for today;
-                $sql = "INSERT  INTO attendance (employeeId) VALUES($employeeID)";
+                $sql = "INSERT  INTO attendance (employeeId, date, timeIn) VALUES('$employeeID', '$today', NOW() )";
                 $result = $conn->query($sql);
                 if($result !== FALSE){
                     echo 'attendance added successfully';
