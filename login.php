@@ -83,6 +83,7 @@
             </form>
         </div>
     </div>
+    <a href="resetpassword.php">forgot password?</a>
     <style>
         body {
             font-family: Arial, sans-serif;
