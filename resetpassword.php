@@ -10,7 +10,12 @@
     require_once 'envtemp.php';
 
     //Load Composer's autoloader (created by composer, not included with PHPMailer)
-    require 'vendor/autoload.php';
+    // require 'vendor/autoload.php';
+
+    // Ensure PHPMailer files are correctly included relative to api.php
+    require 'PHPMailer/src/Exception.php';
+    require 'PHPMailer/src/PHPMailer.php';
+    require 'PHPMailer/src/SMTP.php';
 
     //Create an instance; passing `true` enables exceptions
     $mail = new PHPMailer(true);
@@ -23,39 +28,44 @@
         if ($emp) {
             $reset_msg = 'this is a test reset';
             // mail($email, 'Password Reset Code', $reset_msg);
-
-            try {
-                //Server settings
-                $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-                $mail->isSMTP();                                            //Send using SMTP
-                $mail->Host       = $smtp_host;                     //Set the SMTP server to send through
-                $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-                $mail->Username   = $smpt_username;                     //SMTP username
-                $mail->Password   = $smtp_password;                               //SMTP password
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-                $mail->Port       = $smpt_port;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-
-                //Recipients
-                $mail->setFrom($smpt_username, 'Mailer');
-                $mail->addAddress($email, $emp->name);
-                $mail->addReplyTo($smpt_username, 'Information');
-                // $mail->addCC('cc@example.com');
-                // $mail->addBCC('bcc@example.com');
-
-                //Attachments
-                // $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
-                // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
-
-                //Content
-                $mail->isHTML(true);                                  //Set email format to HTML
-                $mail->Subject = 'Here is the subject';
-                $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
-                $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-
-                $mail->send();
-                echo 'Reset code has been sent';
-            } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            $reset_code = rand(1000, 9999);
+            $userId = $emp['id'];
+            $sql = "INSERT INTO resetcodes(userid, code, expiretime) VALUES('$userId','$reset_code', DATE_ADD(NOW(), INTERVAL 30 MINUTE))";
+            if ($conn->query($sql) === TRUE) {
+                # code...
+                try {
+                    //Server settings
+                    $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+                    $mail->isSMTP();                                            //Send using SMTP
+                    $mail->Host       = $smtp_host;                     //Set the SMTP server to send through
+                    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+                    $mail->Username   = $smtp_username;                     //SMTP username
+                    $mail->Password   = $smtp_password;                               //SMTP password
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+                    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+    
+                    //Recipients
+                    $mail->setFrom($smtp_username, 'Mailer');
+                    $mail->addAddress($email, $emp->name);
+                    $mail->addReplyTo($smtp_username, 'Information');
+                    // $mail->addCC('cc@example.com');
+                    // $mail->addBCC('bcc@example.com');
+    
+                    //Attachments
+                    // $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
+                    // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
+    
+                    //Content
+                    $mail->isHTML(true);                                  //Set email format to HTML
+                    $mail->Subject = 'Reset Passowrd Code';
+                    $mail->Body    = "Use code: <b>$reset_code</b> to reset your password";
+                    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+    
+                    $mail->send();
+                    echo 'Reset code has been sent';
+                } catch (Exception $e) {
+                    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                }
             }
         }
         else{
