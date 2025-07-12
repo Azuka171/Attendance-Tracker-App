@@ -63,6 +63,12 @@
     
                     $mail->send();
                     echo 'Reset code has been sent';
+                    
+                    $_SESSION['reset_email'] = $email;
+                    $_SESSION['reset_code'] = $reset_code;
+
+                    header("Location: confirm_resetpassword.php");
+                    exit();
                 } catch (Exception $e) {
                     echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
                 }
