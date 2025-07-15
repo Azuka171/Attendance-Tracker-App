@@ -157,7 +157,7 @@
                     <tr>
                         <td><?php echo $record['first_name'].' '.$record['last_name']?></td>
                         <td><?php echo date('h:i:s a',strtotime($record['timeIn']))?></td>
-                        <td><?php echo date('h:i:s a',strtotime($record['timeOut']))?></td>
+                        <td><?php if($record['timeOut'] ): echo date('h:i:s a',strtotime($record['timeOut'])); else: echo 'N/A'; endif;?></td>
                     </tr>
         <?php
                 }

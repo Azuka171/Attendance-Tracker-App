@@ -36,7 +36,20 @@
     
                 // $_SESSION['sucess'] = 'New record for employee created';
                 // header('Location: ' .$_SERVER['HTTP_REFERER']);
-                header('Location: ./employee-records.php');
+                if (isset($_SESSION['intended_route'])): 
+                    $intended_r = $_SESSION['intended_route'];
+                    header("Location: $intended_r");
+                else:
+                    header('Location: ./dashboard.php');
+                endif;
+
+                // if (isset($_SESSION['intended_route'])){
+                //     $intended_r = $_SESSION['intended_route'];
+                //     header("Location: $intended_r");
+                // } 
+                // else{
+                //     header('Location: ./employee-records.php');
+                // }
                 exit;
     
             }else{
@@ -62,7 +75,10 @@
     <div class="container">
         <div class="login-form">
             <h2>Login</h2>
-
+            <?php if (isset($_SESSION['success_message'])): ?>
+                <div class="success-msg"><?= $_SESSION['success_message']; ?></div>
+                <?php  unset($_SESSION['success_message']);?>
+            <?php endif; ?>
             <form id="loginForm" method="POST">
                 <div class="form-group">
                     <label>Email</label>
@@ -83,7 +99,7 @@
             </form>
         </div>
     </div>
-    <a href="resetpassword.php">forgot password?</a>
+    <a href="reset_password.php">forgot password?</a>
     <style>
         body {
             font-family: Arial, sans-serif;

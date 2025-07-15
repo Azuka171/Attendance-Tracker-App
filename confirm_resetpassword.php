@@ -30,9 +30,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         $sql = "UPDATE users SET password = '$hashed_password' WHERE email = '$email'";
         if ($conn->query($sql) === TRUE) {
             $success = "Password has been successfully reset.";
+            $_SESSION['success_message'] = $success;
             // Optionally unset session vars
             unset($_SESSION['reset_email']);
             unset($_SESSION['reset_code']);
+            header("Location: login.php");
+            exit();
         } else {
             $error = "An error occurred while resetting your password.";
         }
