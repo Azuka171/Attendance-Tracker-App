@@ -73,6 +73,7 @@ if(isset($_POST['employeeId'])){
             <?php } else{?>
                 <button onclick="clockOut()" id="clockOutBtn" class="btn-signOut" disabled>ClockOut</button>
             <?php }?>
+            <!-- <div id="messageBox" class="message-box"></div> -->
             <div id="error"></div>
             <div id="userLocation"></div>
         </div>
@@ -81,90 +82,11 @@ if(isset($_POST['employeeId'])){
 
     <!-- <button onclick="clockIn()" class="btn-signIn" <?php if(TRUE){echo 'disabled';}?>>ClockIn</button> -->
 
+                
+
     
     <style>
-        /* body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa;
-            color: #343a40;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        label{
-            font-size: .625rem;
-            font-style: italic;
-            color: blue;
-            text-transform:capitalize;
-            text-align: center;
-            padding-left:3.125rem ;
-        }
-        .second_emp{
-            display:none;
-        }
-        .emp2{
-            display:none;
-        }
-        .btn-signIn{
-            background-color: rgb(8, 8, 106);
-            color: white;
-            border-radius: .3125rem;
-            width: fit-content;
-        }
-        .btn-signOut{
-            background-color: rgb(8, 8, 106);
-            color: white;
-            border-radius: .3125rem;
-            width: fit-content;
-        }
-        .correct{
-            color: rgb(3, 43, 3);
-            font-size: .5rem;
-            font-style: italic;
-        }
-        .wrong{
-            color: red;
-            font-size: .5rem;
-            font-style: italic;
-        }
-        #userLocation{
-            font-size: .5rem;
-            font-style: italic;
-            color: green;
-        }
-        button[disabled]{
-            background-color: #999;
-            cursor: not-allowed;
-        }
-        input[type="submit"] {
-            padding: 10px 15px;
-            font-size: 16px;
-            font-weight: bold;
-            background-color: #007bff;
-            color: #ffffff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-        form {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        } */
+        
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
@@ -286,16 +208,48 @@ if(isset($_POST['employeeId'])){
             text-align: center;
             margin-top: 20px;
         }
+
+        .message-box {
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            display: block;
+        }
+
+        .message-box.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message-box.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message-box.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
     </style>
     <script>
+
+        
         const accessGranted = confirm('do you want to give us your exact location');
         //actual office coordinates
         // const officelat = 6.2439578;
         // const officeLong = 6.5961918;
 
         //testing coord for home
-        const officelat = 4.8463872;
-        const officeLong = 7.0156288;
+        //const officelat = 4.8463872;
+        //const officeLong = 7.0156288;
+        //testing coord for home
+        const officelat = 6.5568768;
+        const officeLong = 3.3325056;
         
         //const officelat = 6.1854861 ;
         //const officeLong = 6.735517;
@@ -334,6 +288,8 @@ if(isset($_POST['employeeId'])){
         function preventSubmit(event){
             event.preventDefault();
         }
+
+
         function updatePosition(position) {
            // x.innerHTML = "Latitude: " + position.coords.latitude + 
            // "<br>Longitude: " + position.coords.longitude;
@@ -383,6 +339,59 @@ if(isset($_POST['employeeId'])){
                 x.classList ='wrong';
             }
         }
+
+        // function showMessage(message, type = 'success') {
+        //     const messageBox = document.getElementById('messageBox');
+        //     messageBox.innerHTML = message;
+        //     messageBox.className = `message-box ${type}`;
+        // }
+        
+        // function updatePosition(position) {
+        //    // x.innerHTML = "Latitude: " + position.coords.latitude + 
+        //    // "<br>Longitude: " + position.coords.longitude;
+        //     userLong = position.coords.longitude;
+        //     userLat = position.coords.latitude;
+        //     console.log(userLat, userLong);
+            
+        //     // userLocation.innerHTML = 'your latitude:'+ userLat +' '+ 'your longitude:'+ userLong+`<br> is the lat bigger than min? ${userLat >min_lat}<br> |min_lat-->${min_lat}<br> is the lat smaller than max? ${userLat <max_lat}<br> |max_lat-->${max_lat}`;
+        //     userLocation.innerHTML = 'your latitude:'+ userLat +' '+ 'your longitude:'+ userLong;
+
+        //     console.log(userLat >min_lat && userLat < max_lat && userLong >min_lon && userLong < max_lon);
+            
+        //     if(userLat >min_lat && userLat < max_lat && userLong >min_lon && userLong < max_lon){
+        //         x.innerHTML = 'you are within the office location you can clockIn';
+        //         x.classList= 'correct'; 
+
+        //         let formdata = new FormData();
+                // formdata.append("empID", "</?php //if(isset($emID)){echo $emID;}?>");
+        //         //let formdata = {message :"hello"};
+        //         fetch(
+        //             url, 
+        //             {
+        //                 method : "POST", 
+        //                 body : formdata
+        //             }
+        //         ).then((data) => {
+        //             console.log('response from api: ', data);
+        //             const trimmedData = data.trim();
+
+        //             if (trimmedData === 'attendance added successfully') {
+        //                 showMessage('✅ Clock-in successful!', 'success');
+        //                 clockInBtn.disabled = true;
+        //                 closingTimeCheck();
+        //             } else if (trimmedData === 'attendance updated successfully') {
+        //                 showMessage('✅ Clock-out successful!', 'success');
+        //                 clockOutBtn.disabled = true;
+        //             } else {
+        //                 showMessage('❌ Action failed: ' + trimmedData, 'error');
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error('error : ', error);
+        //             showMessage('⚠️ Network or server error occurred!', 'error');
+        //     });
+        // }
+
         function closingTimeCheck(){
             let today = new Date();
             let currentHour = today.getHours();
